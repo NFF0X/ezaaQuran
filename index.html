@@ -8,8 +8,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&family=Noto+Sans+Arabic:wght@400;600&display=swap"
         rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
-   
+    <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -45,30 +45,52 @@
     </section>
     <script>
         const readers = [
-            {id: "minshawy", name: "محمد صديق المنشاوي", nickname: "صوت الباكي", tagline: "الصوت الخاشع الباكي", bio: "صوت بكت له القلوب قبل العيون، امتلك نبرة شجية تلحق بالسامع في آفاق التدبر والخشوع.", years: "1920-1969", deceased: true, mojawwad: "./assets/mojawed-MoahmedsediqElmiashwy.html"},
-            {id: "hosary", name: "محمود خليل الحصري", years: "1917-1980", deceased: true, },
-            {id: "abdelbaset", name: "عبد الباسط عبد الصمد", nickname: "صاحب الحنجرة الذهبية", years: "1927-1988", deceased: true, },
-            {id: "mostafa", name: "مصطفى إسماعيل", years: "1905-1978", deceased: true},
-            {id: "afasy", name: "مشاري راشد العفاسي" },
-            {id: "maher", name: "ماهر المعيقلي"}
+            { id: "minshawy", name: "محمد صديق المنشاوي", nickname: "صوت الباكي", tagline: "الصوت الخاشع الباكي", bio: "صوت بكت له القلوب قبل العيون، امتلك نبرة شجية تلحق بالسامع في آفاق التدبر والخشوع.", years: "1920-1969", deceased: true, mojawwad: "./assets/mojawed-MoahmedsediqElmiashwy.html" },
+            { id: "hosary", name: "محمود خليل الحصري", years: "1917-1980", deceased: true, },
+            { id: "abdelbaset", name: "عبد الباسط عبد الصمد", nickname: "صاحب الحنجرة الذهبية", years: "1927-1988", deceased: true, },
+            { id: "mostafa", name: "مصطفى إسماعيل", years: "1905-1978", deceased: true },
+            { id: "afasy", name: "مشاري راشد العفاسي" },
+            { id: "maher", name: "ماهر المعيقلي" },
         ];
         const $ = i => document.getElementById(i);
-        const el = (t, c, x) => {const e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e};
+        const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x !== undefined) e.textContent = x; return e };
         const norm = t => t.replace(/[\u064B-\u0652\u0640]/g, "").replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه").trim();
         const ini = n => n.replace(/^(أبو|عبد)\s*/, "").charAt(0);
+
         readers.forEach(r => {
-            const c = el("article", "lr"); c.dataset.n = norm(r.name);
+            const c = el("article", "lr");
+            c.dataset.n = norm(r.name + " " + (r.nickname || ""));
             const a = el("div", "av", ini(r.name)), h = el("h3", "", r.name), l = el("a", "", "انتقال إلى صفحة القارئ"); l.href = "#" + r.id;
             const i = el("div", "ri"); i.append(h, l); const b = el("div", "rb"); b.append(a, i); c.append(el("span", "bd", "تلاوات خالدة"), b); $("grid").append(c)
         });
-        $("q").oninput = e => {const q = norm(e.target.value); document.querySelectorAll(".lr").forEach(c => c.hidden = !c.dataset.n.includes(q))};
+
+
+        const programs = [
+            { name: "دولة التلاوة", badge: "برنامج", keywords: "برنامج مسابقة قراء مواهب", url: "./assets/DT-EGY.html" }
+        ];
+        programs.forEach(p => {
+            const c = el("article", "lr");
+            c.dataset.n = norm(p.name + " " + (p.keywords || ""));
+            c.dataset.prog = "1";
+            const a = el("div", "av", ini(p.name)), h = el("h3", "", p.name), l = el("a", "", "انتقال إلى البرنامج"); l.href = p.url;
+            const i = el("div", "ri"); i.append(h, l); const b = el("div", "rb"); b.append(a, i);
+            c.append(el("span", "bd", p.badge || "برنامج"), b); $("grid").append(c)
+        });
+
+        $("q").oninput = e => {
+            const q = norm(e.target.value);
+            document.querySelectorAll("#grid .lr").forEach(c => {
+                c.hidden = !(c.dataset.n || "").includes(q);
+            });
+        };
+
         const STY = [
-            {k: "mojawwad", t: "المصحف المجود", b: "أداء مقامي وخشوع مرتفع", s: "التلاوة التحقيقية المقترنة بالأنغام الإيمانية", i: "⭐", r: [["سرعة الأداء:", "بطيء وبترتيل متأنٍ لإبراز المعاني."], ["التعبير المقامي:", "تنقلات مقامية بديعة تجسد المعاني."], ["الهدف الأساسي:", "التدبر العميق والاسترخاء الإيماني."]]},
-            {k: "murattal", t: "المصحف المرتل", b: "أداء سريع وسلس", s: "التلاوة السريعة المناسبة للختمات اليومية", i: "🎧", r: [["سرعة الأداء:", "متوسطة إلى سريعة لإنجاز الورد اليومي."], ["التعبير المقامي:", "قراءة مرسلة هادئة ومستقرة."], ["الهدف الأساسي:", "الحفظ، المراجعة، وتسهيل ختم القرآن."]]}];
+            { k: "mojawwad", t: "المصحف المجود", b: "أداء مقامي وخشوع مرتفع", s: "التلاوة التحقيقية المقترنة بالأنغام الإيمانية", i: "⭐", r: [["سرعة الأداء:", "بطيء وبترتيل متأنٍ لإبراز المعاني."], ["التعبير المقامي:", "تنقلات مقامية بديعة تجسد المعاني."], ["الهدف الأساسي:", "التدبر العميق والاسترخاء الإيماني."]] },
+            { k: "murattal", t: "المصحف المرتل", b: "أداء سريع وسلس", s: "التلاوة السريعة المناسبة للختمات اليومية", i: "🎧", r: [["سرعة الأداء:", "متوسطة إلى سريعة لإنجاز الورد اليومي."], ["التعبير المقامي:", "قراءة مرسلة هادئة ومستقرة."], ["الهدف الأساسي:", "الحفظ، المراجعة، وتسهيل ختم القرآن."]] }];
         function route() {
             const r = readers.find(x => x.id === location.hash.slice(1));
             $("home").hidden = !!r; $("reader").hidden = !r;
-            if (!r) {return }
+            if (!r) { return }
             window.scrollTo(0, 0);
             $("m").textContent = ini(r.name); $("pa").textContent = ini(r.name);
             $("nick").textContent = r.nickname || "تلاوات خالدة"; $("bn").textContent = "الشيخ " + r.name;
@@ -76,16 +98,16 @@
             const bio = $("bio"); bio.replaceChildren(r.bio || "اكتشف تلاوات الشيخ واستمع إلى السور كاملة بجودة عالية.");
             if (r.murattal && r.mojawwad) bio.append(" اكتشف الفروق اللطيفة بين ", el("b", "", "المصحف المرتل"), " و ", el("b", "", "المصحف المجود"), ".");
             const st = [[r.surahs ?? 114, "سورة"]]; if (r.murattal && r.mojawwad) st.push(["المجود", "روائع التلاوات"]); if (r.years) st.push([r.years, r.deceased ? "رحمه الله" : "حفظه الله"]);
-            $("stats").replaceChildren(...st.map(([v, l]) => {const b = el("div", "st"); b.append(el("strong", "", v), el("span", "", l)); return b}));
+            $("stats").replaceChildren(...st.map(([v, l]) => { const b = el("div", "st"); b.append(el("strong", "", v), el("span", "", l)); return b }));
             const av = STY.filter(s => r[s.k]);
             $("cs").replaceChildren(...(av.length ? av.map(s => {
                 const c = el("div", "card"), a = el("a", "", s.t); a.href = r[s.k];
                 const tx = el("div"); tx.append(a, el("p", "", s.s)); const h = el("div", "ch2"); h.append(tx, el("div", "hi", s.i));
-                const u = el("ul"); s.r.forEach(([l, d]) => {const li = el("li"); const dv = el("div"); dv.append(el("strong", "", l), " " + d); li.append(el("span", "", "⭐"), dv); u.append(li)});
+                const u = el("ul"); s.r.forEach(([l, d]) => { const li = el("li"); const dv = el("div"); dv.append(el("strong", "", l), " " + d); li.append(el("span", "", "⭐"), dv); u.append(li) });
                 c.append(el("div", "cb", s.b), h, u); return c
             }) : [el("p", "soon", "التلاوات قيد الإضافة، ترقبوها قريبًا.")]));
         }
-        $("lb").onclick = () => $("ch").scrollIntoView({behavior: "smooth"});
+        $("lb").onclick = () => $("ch").scrollIntoView({ behavior: "smooth" });
         addEventListener("hashchange", route); route();
     </script>
 </body>
