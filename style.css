@@ -6,6 +6,9 @@
             --panel: #141b31;
             --muted: #9b9b9c;
             --amber: #f59e0b;
+            --panel: #141b31;
+            --muted: #9b9b9c;
+            --amber: #f59e0b;
             color-scheme: dark;
             box-sizing: border-box;
             padding-top: env(safe-area-inset-top, 0px);
@@ -160,7 +163,7 @@
             color: #000;
             font: 14px "Noto Sans Arabic", sans-serif;
             text-align: center;
-            
+            text-decoration: none
         }
 
         /* reader */
@@ -372,7 +375,7 @@
         .ch2 a {
             color: #fff;
             font-size: 18px;
-            text-decoration: none
+            
         }
 
         .ch2 p {
@@ -417,3 +420,4 @@
             text-align: center;
             color: var(--muted)
         }
+      .lr[hidden] { display: none !important; }
