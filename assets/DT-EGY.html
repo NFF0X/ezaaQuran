@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامج دولة التلاوة - مكتبة كبار القراء</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0b132b;
+            --bg-nav: #152452;
+            --bg-card: #0c1631;
+            --gold: #f59e0b;
+            --orange: #fc8600;
+            --text: #e8ecf5;
+            --text-dim: #a9b4d0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* ===== الشريط العلوي ===== */
+        .nv {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            height: 72px;
+            padding: 0 20px;
+            background-color: var(--bg-nav);
+            border-bottom: 1px solid rgba(245, 158, 11, .25);
+        }
+
+        .TC {
+            flex: none;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 3px 8px rgba(245, 158, 11, .6);
+        }
+
+        .T {
+            font-family: 'Amiri', serif;
+            font-size: 30px;
+            line-height: 1;
+            color: var(--gold);
+        }
+
+        .title {
+            font-family: 'Amiri', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold);
+            white-space: nowrap;
+        }
+
+        .sc {
+            margin-right: auto;
+        }
+
+        .sc input {
+            width: 250px;
+            height: 38px;
+            padding: 0 20px;
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text);
+            background-color: var(--bg);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            outline: none;
+            transition: width .3s ease, box-shadow .3s ease;
+        }
+
+        .sc input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .sc input:focus {
+            width: 300px;
+            box-shadow: 0 0 8px rgba(245, 158, 11, .6);
+        }
+
+        /* ===== الأزرار ===== */
+        .btn {
+            flex: none;
+            padding: 6px 18px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gold);
+            background-color: var(--bg-nav);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color .2s, color .2s, box-shadow .2s;
+        }
+
+        .btn:hover,
+        .btn.active {
+            background-color: var(--gold);
+            color: var(--bg);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--text);
+            outline-offset: 2px;
+        }
+
+        .share {
+            box-shadow: 0 2px 10px rgba(245, 158, 11, .45);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 20px 48px;
+        }
+
+        /* ===== المشغل الكبير ===== */
+        .Video-player {
+            padding: 20px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+        }
+
+        .season-badge {
+            display: inline-block;
+            padding: 2px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--orange);
+            background-color: rgba(252, 134, 0, .25);
+            border: 1px solid var(--orange);
+            border-radius: 10px;
+        }
+
+        .ep-title {
+            margin: 14px 0 0;
+            padding-bottom: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gold);
+            border-bottom: 1px solid rgba(245, 158, 11, .3);
+        }
+
+        /* ===== إطار الفيديو المميز ===== */
+        .frame {
+            position: relative;
+            margin-top: 16px;
+            padding: 10px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #fbbf24 0%, #8a5200 30%, var(--orange) 55%, #8a5200 78%, #fbbf24 100%);
+            box-shadow: 0 0 22px rgba(245, 158, 11, .35), inset 0 0 0 1px rgba(255, 255, 255, .2);
+            animation: glow 4s ease-in-out infinite;
+        }
+
+        /* حلقة داخلية رفيعة */
+        .frame::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border: 1px solid rgba(0, 0, 0, .55);
+            border-radius: 14px;
+            pointer-events: none;
+        }
+
+        /* زخارف الأركان */
+        .frame .c {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--bg);
+            border: 2px solid #fbbf24;
+            transform: rotate(45deg);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .frame .tl { top: -8px; right: -8px; }
+        .frame .tr { top: -8px; left: -8px; }
+        .frame .bl { bottom: -8px; right: -8px; }
+        .frame .br { bottom: -8px; left: -8px; }
+
+        #video {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border: 0;
+            border-radius: 10px;
+            color-scheme: dark;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 18px rgba(245, 158, 11, .3), inset 0 0 0 1px rgba(255, 255, 255, .2); }
+            50%      { box-shadow: 0 0 30px rgba(252, 134, 0, .55), inset 0 0 0 1px rgba(255, 255, 255, .3); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .frame { animation: none; }
+        }
+
+        /* ===== المواسم والحلقات ===== */
+        .seasons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 32px 0 20px;
+        }
+
+        .list-title {
+            margin: 0 0 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-color: var(--bg-card);
+            border: 1px solid rgba(252, 134, 0, .55);
+            border-radius: 12px;
+            transition: border-color .2s, transform .2s;
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .card.playing {
+            border-color: var(--gold);
+            box-shadow: 0 0 12px rgba(245, 158, 11, .45);
+        }
+
+        .cover {
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #152452, #000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .cover span {
+            font-family: 'Amiri', serif;
+            font-size: 64px;
+            color: var(--gold);
+            opacity: .6;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 8px;
+            padding: 14px;
+        }
+
+        .card-season {
+            font-size: 13px;
+            color: var(--orange);
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .card-desc {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        .play {
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 0;
+        }
+
+        .play svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 18px;
+            color: var(--text-dim);
+            border: 1px dashed rgba(245, 158, 11, .4);
+            border-radius: 12px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translate(-50%, 20px);
+            padding: 10px 22px;
+            font-size: 15px;
+            color: var(--bg);
+            background-color: var(--gold);
+            border-radius: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s, transform .25s;
+            z-index: 10;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        @media (max-width: 640px) {
+            .nv {
+                gap: 10px;
+                padding: 0 12px;
+            }
+
+            .title {
+                font-size: 18px;
+            }
+
+            .sc input,
+            .sc input:focus {
+                width: 130px;
+            }
+
+            .share {
+                padding: 4px 10px;
+            }
+
+            main {
+                padding: 16px 12px 40px;
+            }
+
+            .frame {
+                padding: 6px;
+                border-radius: 14px;
+            }
+
+            .frame .c {
+                width: 12px;
+                height: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nv">
+        <div class="TC"><span class="T">ت</span></div>
+        <span class="title">برنامج دولة التلاوة</span>
+        <div class="sc">
+            <input type="search" id="sIn" placeholder="ابحث عن حلقة...">
+        </div>
+        <button class="btn share" id="shareBtn">مشاركة</button>
+    </nav>
+
+    <main>
+        <section class="Video-player">
+            <span class="season-badge" id="playerSeason"></span>
+            <h2 class="ep-title" id="playerTitle"></h2>
+            <div class="frame">
+                <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+                <iframe id="video" title="مشغل الحلقة"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <div class="seasons" id="seasons"></div>
+
+        <h3 class="list-title" id="listTitle"></h3>
+        <div class="grid" id="grid"></div>
+    </main>
+
+    <script>
+        /* ====== بيانات الحلقات ======
+           لكل حلقة:
+             title : اسم الحلقة
+             desc  : الوصف
+             yt    : رابط اليوتيوب (watch أو youtu.be أو embed) أو الـ ID بس
+             cover : (اختياري) صورة غلاف خاصة. لو فاضي بيستخدم صورة الفيديو من اليوتيوب تلقائيا.
+           الموسم اللي مصفوفة حلقاته فاضية هيظهر له "الحلقات غير متاحة حاليا". */
+        const seasons = [
+            {
+                name: 'الموسم الأول',
+                episodes: [
+                    { title: 'الحلقة الأولى', desc: 'افتتاح البرنامج وتقديم لجنة التحكيم وأول المتسابقين في رحلة التلاوة.', yt: 'https://youtu.be/_UqfNeQgV-E', cover: '' },
+                    { title: 'الحلقة الثانية', desc: 'جولة التجويد والمقامات، ومنافسة قوية بين المتسابقين.', yt: 'https://youtu.be/UpPCIR1fzvQ?si=AZrbcL0V-_rW7f8V', cover: '' },
+                    { title: 'الحلقة الثالثة', desc: 'لقاء مع كبار القراء وتعرّف على مدارس التلاوة المصرية.', yt: 'https://youtu.be/WusoCDl5pTQ?si=PFOYHHGyBeIo8Vr-', cover: '' },
+                    { title: 'الحلقة الرابعة', desc: 'وصف الحلقة', yt: 'https://youtu.be/bCGRk1Q9LeI?si=qkfM4z2pDLZrUHuB', cover: '' },
+                    { title: 'الحلقة السادسة', desc: 'وصف الحلقة', yt: 'https://youtu.be/yl0LtsAhE_4?si=vV5uUhdzXSidbCdf', cover: '' },
+                    { title: 'الحلقة السابعة', desc: 'وصف الحلقة', yt: 'https://youtu.be/82ij4iIHrs0?si=8LyNj8RPhWvF_ncp', cover: '' },
+                    { title: 'الحلقة الثامنة', desc: 'وصف الحلقة', yt: 'https://youtu.be/usv84Ce90Ww?si=0kQVVqdPjfj5ZVJx', cover: '' },
+                    { title: 'الحلقة التاسعة', desc: 'وصف الحلقة', yt: 'https://youtu.be/mP-EWq3lKIw?si=3d78FC-6O9uHah6P', cover: '' },
+                    { title: 'الحلقة العاشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/4564Z4pRSyM?si=08JlUqFeN6xLBFMx', cover: '' },
+                    { title: 'الحلقة الحادية عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/eupPTiFUhkQ?si=hlq5eMPMQuEXELlt', cover: '' },
+                    { title: 'الحلقة الثانية عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/IXTHVhTvv3g?si=80mFLSfB-mmxD3gy', cover: '' },
+                    { title: 'الحلقة الثالثة عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/WQMh2sH5Oo8?si=Hc1AFWaKHHGBFv7s', cover: '' },
+                    { title: 'الحلقة الرابعة عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/yAatdtlIaSw?si=M4MwUVta6NeZztWu', cover: '' },
+                    { title: 'الحلقة الخامسة عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/gFLs7V3y3YY?si=KHgZByRF6NSItiTJ', cover: '' },
+                    { title: 'الحلقة السادسة عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/-tdxhiM_RqI?si=y7pijkUh-1eWgd95', cover: '' },
+                    { title: 'الحلقة السابعة عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/plrFHxgRqfg?si=ny-fwWJuC2L2KZs_', cover: '' },
+                    { title: 'الحلقة الثامنة عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/5xZEsNwHOJ4?si=igml4G6p3ZvpT1l3', cover: '' },
+                    { title: 'الحلقة التاسعة عشرة', desc: 'وصف الحلقة', yt: 'https://youtu.be/lifR7ANLCRQ?si=xr6FBDYNcfPygoxV', cover: '' },
+                    { title: 'الحلقة العشرون', desc: 'وصف الحلقة', yt: 'https://youtu.be/cKbMMopN3iI?si=C5psoe5zwd-WPmA7', cover: '' },
+                    { title: 'الحلقة الحادية والعشرون', desc: 'وصف الحلقة', yt: 'https://youtu.be/Z49oit7FNEw?si=z3alUMSbcQwC_kvA', cover: '' },
+                    { title: 'الحلقه الاثنين و عشرون', desc: 'وصف الحلقه', yt: 'https://youtu.be/Mk-PmKI4mRc?si=PPpn0tKkY2eEse48', cover: '' }
+                ]
+            },
+            { name: 'الموسم الثاني', episodes: [] },
+            { name: 'الموسم الثالث', episodes: [] }
+        ];
+
+        const $ = id => document.getElementById(id);
+        const video = $('video');
+        let currentSeason = 0;
+        let playing = null; // { s, e }
+
+
+        function ytId(v) {
+            if (!v) return null;
+            v = v.trim();
+            if (/^[\w-]{11}$/.test(v)) return v;
+            const m = v.match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/);
+            return m ? m[1] : null;
+        }
+
+        function coverUrl(ep) {
+            if (ep.cover) return ep.cover;
+            const id = ytId(ep.yt);
+            return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
+        }
+
+        function norm(t) {
+
+            return t.toLowerCase()
+                .replace(/[\u064B-\u0652\u0640]/g, '')
+                .replace(/[أإآ]/g, 'ا')
+                .replace(/ى/g, 'ي')
+                .replace(/ة/g, 'ه')
+                .trim();
+        }
+
+        function renderSeasons() {
+            $('seasons').innerHTML = '';
+            seasons.forEach((s, i) => {
+                const b = document.createElement('button');
+                b.className = 'btn' + (i === currentSeason && !$('sIn').value.trim() ? ' active' : '');
+                b.textContent = s.name;
+                b.onclick = () => { $('sIn').value = ''; currentSeason = i; render(); };
+                $('seasons').appendChild(b);
+            });
+        }
+
+        function makeCard(ep, si, ei) {
+            const card = document.createElement('article');
+            card.className = 'card' + (playing && playing.s === si && playing.e === ei ? ' playing' : '');
+
+            card.innerHTML = `
+                <div class="cover"><span>ت</span></div>
+                <div class="card-body">
+                    <span class="card-season"></span>
+                    <h4 class="card-title"></h4>
+                    <p class="card-desc"></p>
+                    <button class="btn play">
+                        <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0l9 5-9 5z"/></svg>
+                        تشغيل الحلقة
+                    </button>
+                </div>`;
+
+
+            const url = coverUrl(ep);
+            if (url) {
+                const img = new Image();
+                img.alt = 'غلاف ' + ep.title;
+                img.loading = 'lazy';
+                img.onload = () => card.querySelector('.cover').replaceChildren(img);
+                img.src = url; 
+            }
+
+            card.querySelector('.card-season').textContent = seasons[si].name;
+            card.querySelector('.card-title').textContent = ep.title;
+            card.querySelector('.card-desc').textContent = ep.desc;
+            card.querySelector('.play').onclick = () => playEpisode(si, ei, true);
+            return card;
+        }
+
+        function render() {
+            renderSeasons();
+            const q = norm($('sIn').value);
+            const grid = $('grid');
+            grid.innerHTML = '';
+
+            if (q) {
+
+                $('listTitle').textContent = 'نتائج البحث';
+                let found = 0;
+                seasons.forEach((s, si) => s.episodes.forEach((ep, ei) => {
+                    if (norm(ep.title + ' ' + ep.desc).includes(q)) {
+                        grid.appendChild(makeCard(ep, si, ei));
+                        found++;
+                    }
+                }));
+                if (!found) grid.innerHTML = '<div class="empty">لا توجد حلقات مطابقة للبحث.</div>';
+                return;
+            }
+
+            const s = seasons[currentSeason];
+            $('listTitle').textContent = 'حلقات ' + s.name;
+            if (!s.episodes.length) {
+                grid.innerHTML = '<div class="empty">الحلقات غير متاحة حاليا.</div>';
+                return;
+            }
+            s.episodes.forEach((ep, ei) => grid.appendChild(makeCard(ep, currentSeason, ei)));
+        }
+
+        function playEpisode(si, ei, autoplay) {
+            const ep = seasons[si].episodes[ei];
+            playing = { s: si, e: ei };
+            $('playerSeason').textContent = seasons[si].name;
+            $('playerTitle').textContent = ep.title + ' - ' + seasons[si].name;
+            const id = ytId(ep.yt);
+            if (id) {
+                video.src = `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1${autoplay ? '&autoplay=1' : ''}`;
+            } else {
+                video.removeAttribute('src');
+                if (autoplay) showToast('هذه الحلقه لم تضف بعد');
+            }
+            if (autoplay) video.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            render();
+        }
+
+        $('sIn').addEventListener('input', render);
+
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.setAttribute('role', 'status');
+        document.body.appendChild(toast);
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(showToast.t);
+            showToast.t = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        async function copyLink(url) {
+            try {
+                await navigator.clipboard.writeText(url);
+            } catch (e) {
+
+                const ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                const ok = document.execCommand('copy');
+                ta.remove();
+                if (!ok) { prompt('انسخ الرابط:', url); return; }
+            }
+            showToast('تم نسخ رابط الموقع');
+        }
+
+        $('shareBtn').addEventListener('click', async () => {
+            const data = {
+                title: document.title,
+                text: 'شاهد برنامج دولة التلاوة',
+                url: location.href
+            };
+            if (navigator.share) {
+                try {
+                    await navigator.share(data);
+                } catch (e) {
+                    if (e.name !== 'AbortError') copyLink(data.url);
+                }
+            } else {
+                copyLink(data.url);
+            }
+        });
+
+
+        const first = seasons.findIndex(s => s.episodes.length);
+        if (first >= 0) playEpisode(first, 0, false);
+        else {
+            $('playerSeason').textContent = '';
+            $('playerTitle').textContent = 'الحلقات غير متاحة حاليا';
+            render();
+        }
+    </script>
+</body>
+
+</html>
